@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 from nltk.tokenize import sent_tokenize
 from nltk.probability import FreqDist
 
-from Lib.LeIA.leia import SentimentIntensityAnalyzer
+from LeIA.leia import SentimentIntensityAnalyzer
 
 def carregar_configuracoes(arquivo_origem):
     abs_path = path.abspath(arquivo_origem)
