@@ -1,0 +1,6 @@
+{
+    "linguagem": "portuguese",
+    "texto_analise": "data/pspython122022.html",
+    "encoding": "UTF-8",
+    "caracteres_banidos": ["\u200b", "\n"]
+}

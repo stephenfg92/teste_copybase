@@ -1,0 +1,43 @@
+Ei Stephen Guarda, como você está?
+
+Gostaria de te parabenizar por passar para a etapa 2 do processo seletivo para vaga de desenvolvedor Python na Copybase!
+
+Nesta etapa, você deve realizar um teste que será usado para avaliá-lo tecnicamente. Se você for iniciante, não se assuste, e faça o melhor que você puder!
+
+A estrutura deste pequeno projeto, assim como a organização do código serão levados em consideração durante o processo de avaliação. A partir do momento em que você recebeu este e-mail, você tem até o dia 08/12/2022 às 12:00 para finalizar o exercício.
+
+Caso você não finalize todo o projeto a tempo, envie-o assim mesmo. Qualquer projeto entregue após o prazo permitido será desconsiderado.
+
+Para realizar a entrega do seu teste, basta responder a este e-mail com o(s) arquivo(s) do projeto zipado(s).
+
+O desafio
+
+Você deverá abrir o texto do link abaixo como arquivo de texto em Python e extrair algumas informações. Fique a vontade para usar a(s) biblioteca(s) que julgar mais adequada(s).
+
+https://pt.textbin.net/qjgvaozdh2
+
+Extraia e imprima as seguintes informações do texto acima:
+
+    Usernames dos endereços de e-mails presentes no texto
+    Domínios dos endereços de e-mails e quantas vezes cada um aparece no texto
+    As 8 palavras mais comuns excluindo as stopwords
+    Sentimento do texto (positivo ou negativo) e a pontuação da previsão
+    Quantidade de tokens
+    Quantidade de palavras e caracteres
+
+
+Critérios de avaliação
+
+    Bibliotecas utilizadas
+    Estilo de codificação
+    Manutenibilidade e extensibilidade
+    Convenções de nomenclatura usadas
+    Atenção aos requisitos
+
+
+Te desejo um ótimo teste, espero você na próxima etapa!
+
+Obrigado,
+
+
+Felipe Dias - CTO & Co-founder Copybase
