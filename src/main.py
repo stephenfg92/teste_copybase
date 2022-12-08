@@ -171,7 +171,7 @@ obj_freq_tokens_palavra = frequencia_palavras(tokens_palavra)
 print(contar_termos_mais_comuns(obj_freq_tokens_palavra, 8))
 
 #4. Sentimento do texto (positivo ou negativo) e a pontuação da previsão
-print("\n4. O sentimento predonimante no texto seguido do valor de sentimento normalizado de -1 a 1 é: ")
+print("\n4. O sentimento predonimante no texto, seguido do valor de sentimento normalizado de -1 a 1, é: ")
 print(analisar_sentimento(tokens_frase))
 
 #5. Quantidade de tokens
@@ -181,3 +181,4 @@ print(contar_tokens(tokens_palavra))
 #6. Quantidade de palavras e caracteres
 print("\n5. A quantidade de palavras, seguida da quantidade de caracteres sem contar os espaços, é: ")
 print("Palavras: {}. Caracteres: {}".format(contar_palavras(tokens_palavra_com_stopwords), contar_caracteres(tokens_frase, CARACTERES_BANIDOS)))
+print("\n")
