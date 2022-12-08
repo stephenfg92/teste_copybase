@@ -2,6 +2,7 @@ from os import path
 from json import load
 from re import compile
 from statistics import mean
+from enum import Enum
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -79,10 +80,11 @@ def remover_stopwords(tokenizado, stop_words):
 def contar_tokens(tokenizado):
     return len(tokenizado)
 
-def contar_caracteres(tokenizado):
+def contar_caracteres(tokenizado, caracteres_banidos):
     acumulador = 0
     for token in tokenizado:
-        acumulador += len(token)
+        if token != " " and token not in caracteres_banidos:
+            acumulador += len(token)
 
     return acumulador
 
@@ -92,10 +94,10 @@ def contar_palavras(tokenizado):
     )
 
 def frequencia_palavras(tokenizado):
-    tokenizado = remover_pontuacao
+    tokenizado = remover_pontuacao(tokenizado)
     return FreqDist(tokenizado)
 
-def frequencia_emails(lista_emails):
+def frequencia_dominios(lista_emails):
     return FreqDist(lista_emails)
 
 def contar_termos_mais_comuns(freq_dist, quantidade = None):
@@ -104,30 +106,40 @@ def contar_termos_mais_comuns(freq_dist, quantidade = None):
     else:
         return freq_dist.most_common(quantidade)
 
-def tokenizar_frases(texto, linguagem, termos_banidos):
+def tokenizar_frases(texto, linguagem, caracteres_banidos):
     frases = sent_tokenize(texto, linguagem)
-    frases = remover_termos(frases, termos_banidos)
+    frases = remover_termos(frases, caracteres_banidos)
 
     return frases
 
-def tokenizar_palavras(texto, linguagem, termos_banidos, stop_words):
+def tokenizar_palavras(texto, linguagem, caracteres_banidos, stop_words):
     palavras = word_tokenize(texto, linguagem)
-    palavras = remover_termos(palavras, termos_banidos)
+    palavras = remover_termos(palavras, caracteres_banidos)
     palavras = remover_case(palavras)
     palavras = remover_stopwords(palavras, stop_words)
+
+    return palavras
+
+def tokenizar_palavras_com_stopwords(texto, linguagem, caracteres_banidos):
+    palavras = word_tokenize(texto, linguagem)
+    palavras = remover_termos(palavras, caracteres_banidos)
+    palavras = remover_case(palavras)
 
     return palavras
 
 def analisar_sentimento(frases):
     s = SentimentIntensityAnalyzer()
     pontuacoes = [s.polarity_scores(frase)["compound"] for frase in frases]
-    pontuacao = mean(pontuacoes)
+    valor = mean(pontuacoes)
 
-    classificao = "False"
-    if pontuacao > 0.05:
-        classificao = True
+    sentimento = Sentimento.negativo
+    if valor > 0.05:
+        sentimento = Sentimento.positivo
 
-    return {'classificao_positiva': classificao, 'pontuacao': pontuacao}
+    return {'sentimento': sentimento.name, 'valor': valor}
+
+class Sentimento(Enum):
+    negativo, positivo = range(0, 2)
 
 config = carregar_configuracoes("src/config.json")
 
@@ -140,12 +152,32 @@ STOPWORDS = stopwords.words(LINGUAGEM)
 texto = carregar_texto(TEXTO_ANALISE, ENCODING)
 tokens_frase = tokenizar_frases(texto, LINGUAGEM, CARACTERES_BANIDOS)
 tokens_palavra = tokenizar_palavras(texto, LINGUAGEM, CARACTERES_BANIDOS, STOPWORDS)
+tokens_palavra_com_stopwords = tokenizar_palavras_com_stopwords(texto, LINGUAGEM, CARACTERES_BANIDOS)
 emails = extrair_enderecos_email(tokens_frase)
 
 #1. Usernames dos endereços de e-mails presentes no texto
-print("\nOs usernames dos endereços de e-mail presentes no texto são: ")
+print("\n1. Os usernames dos endereços de e-mail presentes no texto são: ")
 print(extrair_username_email(emails))
 
 #2. Domínios dos endereços de e-mails e quantas vezes cada um aparece no texto
-print("\nOs domínios dos endereços de e-mail presentes no texto, bem como sua quantidade de ocorrências, são: ")
-print()
+print("\n2. Os domínios dos endereços de e-mail presentes no texto, seguidos de sua quantidade de ocorrências, são: ")
+dominio_emails = extrair_dominio_email(emails)
+obj_freq_dominios = frequencia_dominios(dominio_emails)
+print(contar_termos_mais_comuns(obj_freq_dominios))
+
+#3. As 8 palavras mais comuns excluindo as stopwords
+print("\n3. As 8 palavras mais comuns, excluindo as stopwords, seguidas de sua quantidade de ocorrências, são: ")
+obj_freq_tokens_palavra = frequencia_palavras(tokens_palavra)
+print(contar_termos_mais_comuns(obj_freq_tokens_palavra, 8))
+
+#4. Sentimento do texto (positivo ou negativo) e a pontuação da previsão
+print("\n4. O sentimento predonimante no texto seguido do valor de sentimento normalizado de -1 a 1 é: ")
+print(analisar_sentimento(tokens_frase))
+
+#5. Quantidade de tokens
+print("\n5. A quantidade de tokens incluindo pontuação e excluindo stopwords é: ")
+print(contar_tokens(tokens_palavra))
+
+#6. Quantidade de palavras e caracteres
+print("\n5. A quantidade de palavras, seguida da quantidade de caracteres sem contar os espaços, é: ")
+print("Palavras: {}. Caracteres: {}".format(contar_palavras(tokens_palavra_com_stopwords), contar_caracteres(tokens_frase, CARACTERES_BANIDOS)))
